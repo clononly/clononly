@@ -345,14 +345,17 @@
   <p class="nl-label">Newsletter</p>
   <h2 class="nl-heading">Stay<br><em>close</em><br>to the sound.</h2>
   <p class="nl-sub">Updates direct.<br>No noise. Just signal.</p>
-  <div class="form-box">
-    <input type="email" class="form-input" id="email" placeholder="YOUR EMAIL" autocomplete="off">
+  <form class="form-box" id="mc-form" novalidate>
+    <input type="email" class="form-input" id="email" name="EMAIL" placeholder="YOUR EMAIL" autocomplete="off" required>
+    <input type="hidden" name="u" value="1d998699e582aafed45629b3b">
+    <input type="hidden" name="id" value="70fc43841b">
+    <div style="position:absolute;left:-5000px" aria-hidden="true"><input type="text" name="b_1d998699e582aafed45629b3b_70fc43841b" tabindex="-1" value=""></div>
     <div class="form-divider"></div>
-    <button class="form-btn" onclick="subscribe()">
-      <span class="form-btn-inner"><span>Subscribe</span><span>→</span></span>
+    <button type="submit" class="form-btn">
+      <span class="form-btn-inner"><span id="btn-text">Subscribe</span><span>↗</span></span>
     </button>
-  </div>
-  <p class="success" id="success">✓ &nbsp;You're in. Watch your inbox.</p>
+  </form>
+  <p class="success" id="success">✓ &nbsp;You’re in. Watch your inbox.</p>
 </div>
 
 <footer>
@@ -361,17 +364,31 @@
 </footer>
 
 <script>
-function subscribe(){
-  const e=document.getElementById('email');
-  const s=document.getElementById('success');
-  if(!e.value||!e.value.includes('@')){e.placeholder='ENTER VALID EMAIL';return;}
-  window.open('http://eepurl.com/jrwgfg','_blank');
-  e.parentElement.style.opacity='0.4';
-  e.parentElement.style.pointerEvents='none';
-  s.style.display='block';
-}
-document.getElementById('email').addEventListener('keydown',e=>{if(e.key==='Enter')subscribe();});
+document.getElementById('mc-form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var email=document.getElementById('email');
+  var btn=document.getElementById('btn-text');
+  var success=document.getElementById('success');
+  if(!email.value||!email.value.includes('@')){email.placeholder='ENTER VALID EMAIL';return;}
+  btn.textContent='Sending...';
+  window.mcCb=function(data){
+    document.getElementById('mc-form').style.opacity='0.4';
+    document.getElementById('mc-form').style.pointerEvents='none';
+    if(data.result==='success'){
+      success.textContent='✓  You’re in. Watch your inbox.';
+    } else {
+      var msg=data.msg?data.msg.replace(/<[^>]*>/g,'').substring(0,80):'Subscribed!';
+      success.textContent='✓  '+msg;
+    }
+    success.style.display='block';
+    btn.textContent='Subscribe';
+  };
+  var s=document.createElement('script');
+  s.src='https://gmail.us5.list-manage.com/subscribe/post-json?u=1d998699e582aafed45629b3b&id=70fc43841b&f_id=0052f2e0f0&EMAIL='+encodeURIComponent(email.value)+'&c=mcCb';
+  document.head.appendChild(s);
+});
 </script>
 </body>
 </html>
+
  
